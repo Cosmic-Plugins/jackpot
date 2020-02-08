@@ -1,0 +1,3 @@
+rootProject.name = 'jackpot'
+
+include 'jackpot-common', 'jackpot-spigot', 'jackpot-sponge'

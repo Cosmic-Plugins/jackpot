@@ -1,0 +1,7 @@
+.idea/**
+.gradle/**
+jackpot-common/**
+jackpot-spigot/build/**
+jackpot-spigot/out/**
+jackpot-sponge/build/**
+jackpot-sponge/out/**

@@ -1,0 +1,12 @@
+name: Jackpot
+version: 1.0.0
+main: me.randomhashtags.jackpot.JackpotSpigot
+api-version: 1.13
+authors: [RandomHashTags]
+depend:
+  - Vault
+softdepend:
+  - PlaceholderAPI
+commands:
+  jackpot:
+    permission: Jackpot.command
