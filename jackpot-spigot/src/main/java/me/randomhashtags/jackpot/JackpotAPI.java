@@ -16,6 +16,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -175,8 +177,8 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
             final BigDecimal winnerTickets = ticketsSold.get(winner), taxed = value.multiply(tax), total = value.subtract(taxed);
             eco.depositPlayer(op, total.doubleValue());
 
-            final RPPlayer pdata = RPPlayer.get(winner);
-            pdata.jackpotWins += 1;
+            final JPlayer pdata = JPlayer.get(winner);
+            pdata.jackpotWins = pdata.jackpotWins.add(BigDecimal.ONE);
             pdata.jackpotWonCash = pdata.jackpotWonCash.add(total);
 
             final String percent = formatDouble(getPercent(winnerTickets, size)), tt = formatInt(size);
@@ -221,7 +223,7 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
         replacements.put("{TIME}", getRemainingTime(timeleft));
         replacements.put("{$}", formatBigDecimal(value));
         for(Player player : Bukkit.getOnlinePlayers()) {
-            if(RPPlayer.get(player.getUniqueId()).doesReceiveJackpotNotifications()) {
+            if(JPlayer.get(player.getUniqueId()).doesReceiveNotifications()) {
                 sendStringListMessage(player, msg, replacements);
             }
         }
@@ -277,7 +279,7 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
             PLUGIN_MANAGER.callEvent(e);
             if(!e.isCancelled()) {
                 final UUID uuid = player.getUniqueId();
-                final RPPlayer pdata = RPPlayer.get(uuid);
+                final JPlayer pdata = JPlayer.get(uuid);
                 pdata.jackpotTickets = pdata.jackpotTickets.add(tickets);
                 ticketsSold.put(uuid, ticketsSold.getOrDefault(uuid, BigDecimal.ZERO).add(tickets));
                 value = value.add(cost);
@@ -305,10 +307,10 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
     public void viewStats(@NotNull Player player) {
         if(player.hasPermission("Jackpot.stats")) {
             final HashMap<String, String> replacements = new HashMap<>();
-            final RPPlayer pdata = RPPlayer.get(player.getUniqueId());
+            final JPlayer pdata = JPlayer.get(player.getUniqueId());
             replacements.put("{$}", formatBigDecimal(pdata.jackpotWonCash));
             replacements.put("{TICKETS}", formatBigDecimal(pdata.jackpotTickets));
-            replacements.put("{WINS}", formatInt(pdata.jackpotWins));
+            replacements.put("{WINS}", formatBigDecimal(pdata.jackpotWins));
             sendStringListMessage(player, getStringList(JACKPOT_CONFIG, "messages.stats"), replacements);
         }
     }
@@ -334,9 +336,9 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
     }
     public void tryToggleNotifications(@NotNull Player player) {
         if(player.hasPermission("Jackpot.toggle")) {
-            final RPPlayer pdata = RPPlayer.get(player.getUniqueId());
-            final boolean status = !pdata.doesReceiveJackpotNotifications();
-            pdata.setReceivesJackpotNotifications(status);
+            final JPlayer pdata = JPlayer.get(player.getUniqueId());
+            final boolean status = !pdata.doesReceiveNotifications();
+            pdata.setReceivesNotifications(status);
             sendStringListMessage(player, getStringList(JACKPOT_CONFIG, "messages.toggle notifications." + (status ? "on" : "off")), null);
         }
     }
@@ -366,5 +368,13 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
             }
             player.closeInventory();
         }
+    }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void playerJoinEvent(PlayerJoinEvent event) {
+        JPlayer.get(event.getPlayer().getUniqueId());
+    }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void playerQuitEvent(PlayerQuitEvent event) {
+        JPlayer.get(event.getPlayer().getUniqueId()).unload();
     }
 }
