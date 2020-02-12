@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
@@ -24,8 +25,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public interface UVersionable extends Versionable {
+    File DATA_FOLDER = JackpotSpigot.getPlugin.getDataFolder();
+
     JackpotSpigot JACKPOT = JackpotSpigot.getPlugin;
-    FileConfiguration JACKPOT_CONFIG = JACKPOT.getConfig();
     PluginManager PLUGIN_MANAGER = Bukkit.getPluginManager();
     Random RANDOM = new Random();
 
@@ -43,6 +45,16 @@ public interface UVersionable extends Versionable {
             messages.put(identifier, colorizeListString(yml.getStringList(identifier)));
         }
         return messages.get(identifier);
+    }
+
+    default void save(String folder, String file) {
+        final String SEPARATOR = File.separator;
+        final boolean hasFolder = folder != null && !folder.equals("");
+        final File f = new File(DATA_FOLDER + SEPARATOR + (hasFolder ? folder + SEPARATOR : ""), file);
+        if(!f.exists()) {
+            f.getParentFile().mkdirs();
+            JACKPOT.saveResource(hasFolder ? folder + SEPARATOR + file : file, false);
+        }
     }
 
     default HashSet<String> getConfigurationSectionKeys(FileConfiguration yml, String key, boolean includeKeys, String...excluding) {

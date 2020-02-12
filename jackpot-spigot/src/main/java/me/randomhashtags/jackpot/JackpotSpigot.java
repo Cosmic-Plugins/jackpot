@@ -9,7 +9,6 @@ public final class JackpotSpigot extends JavaPlugin {
     @Override
     public void onEnable() {
         getPlugin = this;
-        saveSettings();
         getCommand("jackpot").setExecutor(JackpotAPI.INSTANCE);
         enable();
     }
@@ -19,12 +18,8 @@ public final class JackpotSpigot extends JavaPlugin {
         disable();
     }
 
-    private void saveSettings() {
-        saveDefaultConfig();
-    }
-
     public void enable() {
-        saveSettings();
+        saveDefaultConfig();
         JackpotAPI.INSTANCE.load();
     }
     public void disable() {

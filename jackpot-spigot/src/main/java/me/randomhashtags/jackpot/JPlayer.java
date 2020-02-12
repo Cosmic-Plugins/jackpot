@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.UUID;
 
-public final class JPlayer implements UVersionable {
+public class JPlayer implements UVersionable {
     private static final String PLAYER_DATA_FOLDER = JACKPOT.getDataFolder() + File.separator + "playerData";
     public static final HashMap<UUID, JPlayer> CACHED_PLAYERS = new HashMap<>();
 
@@ -20,7 +20,7 @@ public final class JPlayer implements UVersionable {
     private File file;
     private YamlConfiguration yml;
     private boolean notifications = true;
-    public BigDecimal jackpotWonCash = BigDecimal.ZERO, jackpotTickets = BigDecimal.ZERO, jackpotWins = BigDecimal.ZERO;
+    public BigDecimal totalWonCash = BigDecimal.ZERO, totalTicketsBought = BigDecimal.ZERO, totalWins = BigDecimal.ZERO;
 
     public JPlayer(UUID uuid) {
         this.uuid = uuid;
@@ -56,9 +56,9 @@ public final class JPlayer implements UVersionable {
         if(!isLoaded) {
             isLoaded = true;
             notifications = yml.getBoolean("notifications");
-            jackpotTickets = BigDecimal.valueOf(yml.getInt("total tickets bought"));
-            jackpotWins = BigDecimal.valueOf(yml.getInt("total wins"));
-            jackpotWonCash = BigDecimal.valueOf(yml.getInt("total won cash"));
+            totalTicketsBought = BigDecimal.valueOf(yml.getInt("total tickets bought"));
+            totalWins = BigDecimal.valueOf(yml.getInt("total wins"));
+            totalWonCash = BigDecimal.valueOf(yml.getInt("total won cash"));
         }
         return this;
     }
@@ -75,9 +75,9 @@ public final class JPlayer implements UVersionable {
     }
     public void backup() {
         yml.set("notifications", notifications);
-        yml.set("total tickets bought", jackpotTickets.intValue());
-        yml.set("total wins", jackpotWins);
-        yml.set("total won cash", jackpotWonCash.intValue());
+        yml.set("total tickets bought", totalTicketsBought.intValue());
+        yml.set("total wins", totalWins);
+        yml.set("total won cash", totalWonCash.intValue());
 
         save();
     }
