@@ -7,11 +7,22 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+    maven {
+        name = 'PlaceholderAPI'
+        url = "http://repo.extendedclip.com/content/repositories/placeholderapi"
+    }
+    maven {
+        name = 'Vault'
+        url = "http://nexus.hc.to/content/repositories/pub_releases"
+    }
 }
 
 dependencies {
     compile project(':jackpot-common')
     compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
+
+    implementation 'me.clip:placeholderapi:2.10.3'
+    implementation 'net.milkbowl.vault:VaultAPI:1.7'
 }
 
 processResources {

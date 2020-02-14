@@ -1,8 +1,11 @@
 package me.randomhashtags.jackpot;
 
 import com.sun.istack.internal.NotNull;
+import me.randomhashtags.jackpot.event.JackpotPurchaseTicketsEvent;
+import me.randomhashtags.jackpot.supported.Vault;
 import me.randomhashtags.jackpot.universal.UInventory;
 import me.randomhashtags.jackpot.universal.UVersionable;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -39,6 +42,7 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
     private File otherdataF;
     private YamlConfiguration otherdata;
     public YamlConfiguration CONFIG;
+    private Economy eco;
     
     public int task;
     public List<Integer> countdownTasks;
@@ -109,6 +113,8 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
         item = new ItemStack(Material.APPLE);
         itemMeta = item.getItemMeta();
         lore = new ArrayList<>();
+
+        eco = Vault.getVault().getEconomy();
 
         CONFIG = YamlConfiguration.loadConfiguration(new File(DATA_FOLDER, "config.yml"));
         save(null, "_data.yml");
