@@ -1,6 +1,6 @@
 package me.randomhashtags.jackpot.universal;
 
-import com.sun.istack.internal.NotNull;
+import me.randomhashtags.jackpot.NotNull;
 import me.randomhashtags.jackpot.util.Versionable;
 import org.bukkit.Color;
 import org.bukkit.Material;

@@ -1,6 +1,5 @@
 package me.randomhashtags.jackpot;
 
-import com.sun.istack.internal.NotNull;
 import me.randomhashtags.jackpot.event.JackpotPurchaseTicketsEvent;
 import me.randomhashtags.jackpot.supported.Vault;
 import me.randomhashtags.jackpot.universal.UInventory;

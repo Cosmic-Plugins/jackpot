@@ -1,10 +1,12 @@
 package me.randomhashtags.jackpot;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JackpotSpigot extends JavaPlugin {
 
     public static JackpotSpigot getPlugin;
+    public boolean placeholderapi;
 
     @Override
     public void onEnable() {
@@ -20,9 +22,11 @@ public final class JackpotSpigot extends JavaPlugin {
 
     public void enable() {
         saveDefaultConfig();
+        placeholderapi = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
         JackpotAPI.INSTANCE.load();
     }
     public void disable() {
+        placeholderapi = false;
         JackpotAPI.INSTANCE.unload();
     }
 

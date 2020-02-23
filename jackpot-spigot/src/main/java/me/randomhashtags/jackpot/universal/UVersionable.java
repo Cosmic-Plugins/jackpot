@@ -1,7 +1,7 @@
 package me.randomhashtags.jackpot.universal;
 
-import com.sun.istack.internal.NotNull;
 import me.randomhashtags.jackpot.JackpotSpigot;
+import me.randomhashtags.jackpot.NotNull;
 import me.randomhashtags.jackpot.util.Versionable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,6 +33,8 @@ public interface UVersionable extends Versionable {
 
     BukkitScheduler SCHEDULER = Bukkit.getScheduler();
     ConsoleCommandSender CONSOLE = Bukkit.getConsoleSender();
+
+    Enchantment[] VANILLA_ENCHANTS = Enchantment.values();
 
     HashMap<FileConfiguration, HashMap<String, List<String>>> FEATURE_MESSAGES = new HashMap<>();
 
@@ -240,7 +242,7 @@ public interface UVersionable extends Versionable {
     default Enchantment getEnchantment(@NotNull String string) {
         if(string != null) {
             string = string.toLowerCase().replace("_", "");
-            for(Enchantment enchant : Enchantment.values()) {
+            for(Enchantment enchant : VANILLA_ENCHANTS) {
                 final String name = enchant != null ? enchant.getName() : null;
                 if(name != null && string.startsWith(name.toLowerCase().replace("_", ""))) {
                     return enchant;
