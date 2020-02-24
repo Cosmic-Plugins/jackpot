@@ -105,6 +105,7 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
         if(isEnabled) {
             return;
         }
+        isEnabled = true;
         final long started = System.currentTimeMillis();
         
         PLUGIN_MANAGER.registerEvents(this, JACKPOT);
@@ -154,12 +155,10 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
         pickNextWinner = e == 0 ? started+winnerPickedEvery*1000 : e;
 
         value = BigDecimal.valueOf(otherdata.getDouble("jackpot.value"));
-        for(String s : getConfigurationSectionKeys(otherdata, "jackpot", false)) {
-            if(!s.equals("value") && !s.equals("pick next winner")) {
-                final UUID uuid = UUID.fromString(s);
-                final BigDecimal b = BigDecimal.valueOf(otherdata.getInt("jackpot." + s));
-                ticketsSold.put(uuid, b);
-            }
+        for(String s : getConfigurationSectionKeys(otherdata, "jackpot", false, "value", "pick next winner")) {
+            final UUID uuid = UUID.fromString(s);
+            final BigDecimal b = BigDecimal.valueOf(otherdata.getInt("jackpot." + s));
+            ticketsSold.put(uuid, b);
         }
         startTask(started);
         sendConsoleDidLoadFeature("Jackpot", started);
@@ -171,7 +170,7 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
 
             otherdata.set("jackpot", null);
             otherdata.set("jackpot.pick next winner", pickNextWinner);
-            otherdata.set("jackpot.value", value);
+            otherdata.set("jackpot.value", value.doubleValue());
             for(UUID uuid : ticketsSold.keySet()) {
                 otherdata.set("jackpot." + uuid.toString(), ticketsSold.get(uuid).intValue());
             }
@@ -179,6 +178,9 @@ public enum JackpotAPI implements Listener, CommandExecutor, UVersionable {
             SCHEDULER.cancelTask(task);
             for(int i : countdownTasks) {
                 SCHEDULER.cancelTask(i);
+            }
+            for(JPlayer player : JPlayer.CACHED_PLAYERS.values()) {
+                player.backup();
             }
         }
     }

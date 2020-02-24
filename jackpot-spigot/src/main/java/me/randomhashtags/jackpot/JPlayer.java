@@ -49,7 +49,7 @@ public class JPlayer implements UVersionable {
     }
 
     public static JPlayer get(UUID player) {
-        return CACHED_PLAYERS.getOrDefault(player, new JPlayer(player).load());
+        return CACHED_PLAYERS.getOrDefault(player, new JPlayer(player)).load();
     }
 
     public JPlayer load() {
