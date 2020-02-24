@@ -76,7 +76,7 @@ public class JPlayer implements UVersionable {
     public void backup() {
         yml.set("notifications", notifications);
         yml.set("total tickets bought", totalTicketsBought.intValue());
-        yml.set("total wins", totalWins);
+        yml.set("total wins", totalWins.intValue());
         yml.set("total won cash", totalWonCash.intValue());
 
         save();
